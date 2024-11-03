@@ -150,6 +150,7 @@ fn respond(req: *Client.Request, arena: Allocator) !Result {
 
     var body: []const u8 = &.{};
     const content_length = req.response.content_length;
+    std.debug.print("[{any}] CONTENT LENGTH = {any}\n", .{ req.uri, req.response.content_length });
     if (content_length != null and content_length.? > 0) {
         body = try req.reader().readAllAlloc(arena, MAX_BODY_BUFFER);
     }
