@@ -245,15 +245,9 @@ fn emitOverridableHeader(prefix: []const u8, v: Client.Request.Headers.Value, w:
 fn respond(req: *Request, arena: Allocator) !Result {
     try req.wait();
 
-    var body: []const u8 = &.{};
-    const content_length = req.response.content_length;
-    if (content_length != null and content_length.? > 0) {
-        body = try req.reader().readAllAlloc(arena, MAX_BODY_BUFFER);
-    }
-
     return Result{
         .status = req.response.status,
         .headers = HeaderIterator.init(&response_headers),
-        .body = body,
+        .body = try req.reader().readAllAlloc(arena, MAX_BODY_BUFFER),
     };
 }
